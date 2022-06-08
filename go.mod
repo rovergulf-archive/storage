@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/storage v1.22.1
 	github.com/aws/aws-sdk-go v1.44.29
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/spf13/cobra v1.1.3
+	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
 	go.etcd.io/etcd/client/v3 v3.5.4
