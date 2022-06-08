@@ -12,6 +12,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 )
 
@@ -42,12 +43,12 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", os.Getenv("CONFIG"), "Config file path (default is $HOME/.rovergulf/config.yaml)")
-	rootCmd.PersistentFlags().Bool("log_json", false, "Enable JSON formatted logs output")
-	rootCmd.PersistentFlags().Int("log_level", int(zapcore.DebugLevel), "Log level")
+	rootCmd.PersistentFlags().Bool("log-json", false, "Enable JSON formatted logs output")
+	rootCmd.PersistentFlags().Int("log-level", int(zapcore.DebugLevel), "Log level")
 
 	// bind viper persistent flags
-	bindViperPersistentFlag(rootCmd, "log_json", "log_json")
-	bindViperPersistentFlag(rootCmd, "log_level", "log_level")
+	viper.BindPFlag("log_json", rootCmd.PersistentFlags().Lookup("log-json"))
+	viper.BindPFlag("log_level", rootCmd.PersistentFlags().Lookup("log-level"))
 
 	initZapLogger()
 }
@@ -55,7 +56,7 @@ func init() {
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	//viper.SetEnvPrefix("STORAGE")
-	//viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	if cfgFile != "" {
 		// Use config file from the flag.
@@ -109,13 +110,10 @@ func initZapLogger() {
 
 func setDefaultFlags() {
 
-	viper.SetDefault("app.env", "dev")
-
-	viper.SetDefault("metrics", true)
-
 	// storage
-	viper.SetDefault("storage.type", "dir")
-	viper.SetDefault("storage.path", "path")
+	viper.SetDefault("type", "dir")
+	viper.SetDefault("path", "tmp")
+
 	// etcd
 	viper.SetDefault("etcd.endpoints", []string{os.Getenv("ETCD_ADDR")})
 	viper.SetDefault("etcd.role", os.Getenv("ETCD_ROLE"))
@@ -149,19 +147,7 @@ func writeOutput(cmd *cobra.Command, v interface{}) error {
 	}
 }
 
-func bindViperFlag(cmd *cobra.Command, viperVal, flagName string) {
-	if err := viper.BindPFlag(viperVal, cmd.Flags().Lookup(flagName)); err != nil {
-		log.Printf("Failed to bind viper flag: %s", err)
-	}
-}
-
-func bindViperPersistentFlag(cmd *cobra.Command, viperVal, flagName string) {
-	if err := viper.BindPFlag(viperVal, cmd.PersistentFlags().Lookup(flagName)); err != nil {
-		log.Printf("Failed to bind viper flag: %s", err)
-	}
-}
-
-func sigHandle(fn func(sig os.Signal)) {
+func handleOsSignal(fn func(sig os.Signal)) {
 	exitChan := make(chan os.Signal, 1)
 	signal.Notify(exitChan, os.Interrupt, os.Kill, syscall.SIGTERM)
 

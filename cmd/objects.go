@@ -44,7 +44,7 @@ func listObjectsCmd() *cobra.Command {
 			ctx, cancel := context.WithCancel(ctx)
 			defer cancel()
 
-			sigHandle(func(signal os.Signal) {
+			handleOsSignal(func(signal os.Signal) {
 				time.AfterFunc(15*time.Second, func() {
 					logger.Fatalf("Failed to shutdown normally. Closed after 15 sec shutdown")
 				})
@@ -74,7 +74,7 @@ func getObjectsCmd() *cobra.Command {
 			ctx, cancel := context.WithCancel(ctx)
 			defer cancel()
 
-			sigHandle(func(signal os.Signal) {
+			handleOsSignal(func(signal os.Signal) {
 				time.AfterFunc(15*time.Second, func() {
 					logger.Fatalf("Failed to shutdown normally. Closed after 15 sec shutdown")
 				})
@@ -104,7 +104,7 @@ func putObjectsCmd() *cobra.Command {
 			ctx, cancel := context.WithCancel(ctx)
 			defer cancel()
 
-			sigHandle(func(signal os.Signal) {
+			handleOsSignal(func(signal os.Signal) {
 				time.AfterFunc(15*time.Second, func() {
 					logger.Fatalf("Failed to shutdown normally. Closed after 15 sec shutdown")
 				})
@@ -132,7 +132,7 @@ func deleteObjectsCmd() *cobra.Command {
 			ctx, cancel := context.WithCancel(ctx)
 			defer cancel()
 
-			sigHandle(func(signal os.Signal) {
+			handleOsSignal(func(signal os.Signal) {
 				time.AfterFunc(15*time.Second, func() {
 					logger.Fatalf("Failed to shutdown normally. Closed after 15 sec shutdown")
 				})
@@ -168,7 +168,7 @@ func syncObjectsCmd() *cobra.Command {
 
 			fmt.Println(recursive, exlude, include)
 
-			sigHandle(func(signal os.Signal) {
+			handleOsSignal(func(signal os.Signal) {
 				time.AfterFunc(15*time.Second, func() {
 					logger.Fatalf("Failed to shutdown normally. Closed after 15 sec shutdown")
 				})
