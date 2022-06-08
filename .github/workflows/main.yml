@@ -1,0 +1,28 @@
+name: Golang CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Go get
+        run: go mod tidy
+
+      - name: Fmt
+        run: go fmt ./...
+
+      - name: Test
+        run: go test ./... -cover
