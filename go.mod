@@ -10,7 +10,7 @@ require (
 	github.com/spf13/viper v1.12.0
 	github.com/stretchr/testify v1.8.0
 	go.etcd.io/etcd/client/v3 v3.5.4
-	go.uber.org/zap v1.21.0
+	go.uber.org/zap v1.23.0
 	google.golang.org/api v0.86.0
 	gopkg.in/yaml.v2 v2.4.0
 )
